@@ -8,11 +8,11 @@ an ordinary coder try to explore DBMS.
 
 ## Plan - 计划
 
-[x] page handle
-[x] lru policy
-[ ] buffer pool
-[ ] b+tree storage
-[ ] transaction supported
+- [x] page handle
+- [x] lru policy
+- [ ] buffer pool
+- [ ] b+tree storage
+- [ ] transaction supported
 
 ## Run - 运行
 
