@@ -1,4 +1,4 @@
-# 一个buffer pool
+# 一个buffer pool manager
 
 ## Think - 初衷
 
