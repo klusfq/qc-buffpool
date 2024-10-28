@@ -1,11 +1,12 @@
 #[derive(Debug, Clone, Copy)]
 pub struct QcPager([u8;4096]);
 
-
 impl QcPager {
     // -- [0~3]: key, [4~5]: pointer, [6~7]: len
     const SLOT_SIZE_LOW: u8 = 8;
     const SLOT_SIZE: usize = Self::SLOT_SIZE_LOW as usize;
+
+    // -- is_dirty
 
     pub fn new() -> Self {
         let mut pg = QcPager([0_u8;4096]);
@@ -23,6 +24,10 @@ impl QcPager {
 
     pub fn mut_buffer(&mut self) -> &mut [u8] {
         return self.0.as_mut_slice();
+    }
+
+    pub fn is_valiable(&self) -> bool {
+        self.get_slot_len() > 0
     }
 
     pub fn save(&mut self, k: u32, v: String) -> Option<usize> {
@@ -75,6 +80,8 @@ impl QcPager {
         println!("slot offset: {}", slot_start);
         println!("slot count: {}", self.count_slot());
 
+
+        println!("data offset: {}", self.get_data_pointer() as usize);
         // byte array ->> slot array
         let slot_list: Vec<(u32, u16, u16, String)> = self.0[slot_start..(slot_start+slot_len)]
             .chunks(Self::SLOT_SIZE)
@@ -149,6 +156,19 @@ impl QcPager {
         return out;
     }
 
+    // -- dirty control
+    pub fn is_dirty(&self) -> bool {
+        let dirty_flag = u16::from_be_bytes([self.0[6], self.0[7]]);
+        return dirty_flag > 0;
+    }
+    pub fn op_dirty(&mut self) {
+        [self.0[6], self.0[7]] = u16::to_be_bytes(1);
+    }
+    pub fn op_clear(&mut self) {
+        [self.0[6], self.0[7]] = u16::to_be_bytes(1);
+    }
+
+    // -- about slot
     fn set_slot_len(&mut self, len: u16) {
         [self.0[8], self.0[9]] = u16::to_be_bytes(len);
     }
@@ -205,6 +225,7 @@ impl QcPager {
         return Some(());
     }
 
+    // -- about data
     fn set_data_pointer(&mut self, pointer: u16) {
         [self.0[12], self.0[13]] = u16::to_be_bytes(pointer);
     }

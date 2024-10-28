@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use crate::double_link::{parse_qctd, QcDoubleLink, QcTd};
 
-type PageId = u8;
+pub type PageId = u8;
 
 #[derive(Debug)]
 pub struct QcTracer {
