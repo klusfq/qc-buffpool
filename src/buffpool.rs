@@ -31,7 +31,6 @@ impl QcBuffpool {
             .read(true)
             .write(true)
             .create(true)
-            // .custom_flags(libc::O_DIRECT)
             .open("tmp_buffer.db").unwrap();
 
         fd.set_len(4096 * 16).unwrap();
