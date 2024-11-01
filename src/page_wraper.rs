@@ -15,7 +15,7 @@ pub struct QcPageWraper {
 
 impl QcPageWraper {
     pub fn new(page: QcPager, mgr: Weak<dyn QcCaller>) -> Self {
-        QcPageWraper{
+        QcPageWraper {
             pg: Arc::new(Mutex::new(page)),
             mgr,
         }
